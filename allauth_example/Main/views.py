@@ -61,8 +61,34 @@ def get_process_data(request):
     process_data = ProcessData()
     process_data = json.loads(request.POST.dict()['process_data'])
     
-    print(process_data['image_data'])
-        
+    #print(process_data['image_data'])
+    
+    process_data.process_id = process_data['process_id']
+    process_data.task_id = process_data['task_id']
+    process_data.project_id = process_data['project_id']
+    process_data.start_time = process_data['start_time']
+    process_data.end_time = process_data['end_time']
+    process_data.duration = process_data['duration']
+    process_data.weekend_id = process_data['weekend_id']
+    process_data.user_id = 1
+    process_data.image_data = process_data['image_data']
+
+    new_process_data = (
+        process_data.process_id, 
+        process_data.task_id, 
+        process_data.start_time, 
+        process_data.end_time, 
+        process_data.weekend_id, 
+        process_data.duration, 
+        process_data.image_data, 
+        process_data.project_id, 
+        process_data.user_id
+        )
+    
+    process_data_insert_query = "insert into Main_processdata values(?,?,?,?,?,?,?,?,?)"
+    conn = sqlite3.connect("")
+    cursor = conn.cursor()
+    cursor.execute(process_data_insert_query, new_process_data)
      
        
     if request.METHOD == 'GET':
