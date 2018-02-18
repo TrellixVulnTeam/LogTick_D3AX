@@ -12,7 +12,9 @@ from rest_framework import status
 from Main.main_models.ProcessData import ProcessData
 from .Serializers import ProcessDataSerializer
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 import json
+
 
 
 class process_data_view(APIView):
@@ -57,44 +59,58 @@ def screens(request):
     return render(request,"screens.html",{})
 
 @csrf_exempt
+#@api_view(['GET','POST',])
 def get_process_data(request):
     process_data = ProcessData()
-    process_data = json.loads(request.POST.dict()['process_data'])
+    received_process_data = json.loads(request.POST.dict()['process_data'])
     
-    #print(process_data['image_data'])
+    print(received_process_data['process_id'])
     
-    process_data.process_id = process_data['process_id']
-    process_data.task_id = process_data['task_id']
-    process_data.project_id = process_data['project_id']
-    process_data.start_time = process_data['start_time']
-    process_data.end_time = process_data['end_time']
-    process_data.duration = process_data['duration']
-    process_data.weekend_id = process_data['weekend_id']
+    for k,v in received_process_data.items():
+        print(k)
+    
+    print(received_process_data['process_id'])
+    
+        
+    process_data.process_id = int(str(received_process_data['process_id']))
+    print('step 1')
+    process_data.task_id = int(str(received_process_data['task_id']))
+    print('step 2')
+    process_data.project_id = int(str(received_process_data['project_id']))
+    print('step 3')
+    process_data.start_time = float(str(received_process_data['start_time']))
+    print('step 4')
+    process_data.end_time = float(str(received_process_data['end_time']))
+    print('step 5')
+    #process_data.duration = received_process_data['duration']
+    process_data.duration = 1
+    print('step 6')
+    process_data.weekend_id = int(str(received_process_data['weekend_id']))
+    print('step 7')
     process_data.user_id = 1
-    process_data.image_data = process_data['image_data']
-
-    new_process_data = (
-        process_data.process_id, 
-        process_data.task_id, 
-        process_data.start_time, 
-        process_data.end_time, 
-        process_data.weekend_id, 
-        process_data.duration, 
-        process_data.image_data, 
-        process_data.project_id, 
-        process_data.user_id
-        )
-    
-    process_data_insert_query = "insert into Main_processdata values(?,?,?,?,?,?,?,?,?)"
-    conn = sqlite3.connect("")
-    cursor = conn.cursor()
-    cursor.execute(process_data_insert_query, new_process_data)
+    print('step 8')
+    process_data.image_data = received_process_data['image_data']
+    print('step 9')
+    process_data.image_thumbnail_data = received_process_data['image_data']
+    print('step 10')
+    try:
+        print('step 11')
+        process_data.save()
+        print("saved in db")
+    except Exception as ex:
+        print('step 12')
+        print(ex)
+    print('step 13')
+    return HttpResponse({'Data Received...'}, status=200)
      
        
-    if request.METHOD == 'GET':
-        return Response({'Error: No data received'}, status=400)
-    else:
-        return HttpResponse(request.DATA, status=200, content_type='application/json')
+#     if request.METHOD == 'GET':
+#         return Response({'Error: No data received'}, status=400)
+#     else:
+#         return HttpResponse(request.DATA, status=200, content_type='application/json')
+
+
+
 
 
 @login_required()
