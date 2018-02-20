@@ -73,34 +73,21 @@ def get_process_data(request):
     
         
     process_data.process_id = int(str(received_process_data['process_id']))
-    print('step 1')
     process_data.task_id = int(str(received_process_data['task_id']))
-    print('step 2')
     process_data.project_id = int(str(received_process_data['project_id']))
-    print('step 3')
     process_data.start_time = float(str(received_process_data['start_time']))
-    print('step 4')
     process_data.end_time = float(str(received_process_data['end_time']))
-    print('step 5')
     #process_data.duration = received_process_data['duration']
     process_data.duration = 1
-    print('step 6')
     process_data.weekend_id = int(str(received_process_data['weekend_id']))
-    print('step 7')
     process_data.user_id = 1
-    print('step 8')
     process_data.image_data = received_process_data['image_data']
-    print('step 9')
     process_data.image_thumbnail_data = received_process_data['image_data']
-    print('step 10')
     try:
-        print('step 11')
         process_data.save()
         print("saved in db")
     except Exception as ex:
-        print('step 12')
         print(ex)
-    print('step 13')
     return HttpResponse({'Data Received...'}, status=200)
      
        
